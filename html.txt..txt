@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Advanced Music Slideshow</title>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+  }
+
+  /* Fullscreen Image */
+  #slideshow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+  }
+
+  /* Controls */
+  #controls {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+  }
+
+  button {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid white;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+
+  button:hover {
+    background: rgba(255,255,255,0.3);
+  }
+</style>
+</head>
+<body>
+
+<!-- Slideshow Image -->
+<img id="slideshow" src="photo1.jpg">
+
+<!-- Audio Player -->
+<audio id="musicPlayer" autoplay></audio>
+
+<!-- Controls -->
+<div id="controls">
+  <button onclick="startShow()">Start</button>
+  <button onclick="stopShow()">Stop</button>
+  <button onclick="nextImage()">Next Image</button>
+</div>
+
+<script>
+/* ------------------------------
+   1. MUSIC PLAYLIST
+--------------------------------*/
+const playlist = [
+  "song1.mp3",
+  "song2.mp3",
+  "song3.mp3"
+];
+
+const audio = document.getElementById("musicPlayer");
+
+// shuffle and play
+function playRandomSong() {
+  audio.src = playlist[Math.floor(Math.random() * playlist.length)];
+  audio.play();
+}
+
+// autoplay next random song
+audio.onended = playRandomSong;
+
+playRandomSong(); // start music
+
+
+/* ------------------------------
+   2. IMAGE SLIDESHOW
+--------------------------------*/
+const images = [
+  "photo1.jpg",
+  "photo2.jpg",
+  "photo3.jpg",
+  "photo4.jpg",
+  "photo5.jpg"
+];
+
+let index = 0;
+let running = true;
+let timer = null;
+
+const slideshow = document.getElementById("slideshow");
+
+// fade-in image
+function showImage() {
+  slideshow.style.opacity = 0;
+  setTimeout(() => {
+    slideshow.src = images[index];
+    slideshow.style.opacity = 1;
+  }, 400);
+}
+
+// auto-advance
+function nextImage() {
+  index = (index + 1) % images.length;
+  showImage();
+}
+
+function startShow() {
+  if (running) return;
+  running = true;
+  timer = setInterval(nextImage, 5000);
+}
+
+function stopShow() {
+  running = false;
+  clearInterval(timer);
+}
+
+// start slideshow automatically
+timer = setInterval(nextImage, 5000);
+showImage();
+
+</script>
+
+</body>
+</html>
